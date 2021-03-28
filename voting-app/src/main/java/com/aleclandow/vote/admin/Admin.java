@@ -23,19 +23,18 @@ public class Admin {
     private final static String ADMIN_ID = "admin";
 
     private final HyperLedgerConnector hyperLedgerConnector;
-    private final Contract adminContract;
 
-    public Admin() {
+    public Admin() throws InvalidArgumentException, CertificateException, EnrollmentException, IOException {
         hyperLedgerConnector = new HyperLedgerConnector();
-        adminContract = getAdminContract();
+        enrollWithCertificateAuthority();
     }
 
     public void createAvailableBallotsOnLedger() {
-        hyperLedgerConnector.createAvailableBallotsOnLedger(adminContract);
+        hyperLedgerConnector.createAvailableBallotsOnLedger(ADMIN_ID, applicationProperties.getAdminContractName());
     }
 
     public void getTotals() {
-        hyperLedgerConnector.getTotalsFromLedger(adminContract);
+        hyperLedgerConnector.getTotalsFromLedger(ADMIN_ID, applicationProperties.getAdminContractName());
     }
 
     public void enrollWithCertificateAuthority()
@@ -60,9 +59,5 @@ public class Admin {
         Identity user = Identities.newX509Identity("Org1MSP", enrollment);
         wallet.put(ADMIN_ID, user);
         System.out.println("Successfully enrolled user \"admin\" and imported it into the wallet");
-    }
-
-    private Contract getAdminContract() {
-        return hyperLedgerConnector.getContract(ADMIN_ID, applicationProperties.getAdminContractName());
     }
 }

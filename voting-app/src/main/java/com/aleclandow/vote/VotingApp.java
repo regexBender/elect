@@ -5,12 +5,22 @@ import com.aleclandow.util.ApplicationProperties;
 import com.aleclandow.util.ConsoleColors;
 import com.aleclandow.vote.admin.Action;
 import com.aleclandow.vote.admin.Admin;
+import com.aleclandow.vote.ledger.CertificateAuthority;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.security.cert.CertificateException;
 import java.util.Scanner;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
+import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
 
 public class VotingApp {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)
+        throws IOException, CertificateException, EnrollmentException, InvalidArgumentException, NoSuchMethodException,
+        org.hyperledger.fabric.sdk.exception.InvalidArgumentException, InstantiationException, CryptoException,
+        IllegalAccessException, InvocationTargetException, ClassNotFoundException, URISyntaxException {
         System.out.print(ConsoleColors.CYAN);
         System.out.println("* Welcome to the Secure Voting Program using a Permissioned BlockChain *");
         System.out.println("- Using IBM's HyperLedger Fabric");
@@ -22,6 +32,7 @@ public class VotingApp {
         Scanner input = new Scanner(System.in);
 
         ApplicationProperties.loadProperties();
+        CertificateAuthority.initCaClient();
 
         while (true) {
             System.out.println(ConsoleColors.BLUE);
