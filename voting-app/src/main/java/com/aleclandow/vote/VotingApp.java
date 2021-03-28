@@ -17,10 +17,15 @@ import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
 
 public class VotingApp {
 
+    static {
+        System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
+    }
+
     public static void main(String[] args)
         throws IOException, CertificateException, EnrollmentException, InvalidArgumentException, NoSuchMethodException,
         org.hyperledger.fabric.sdk.exception.InvalidArgumentException, InstantiationException, CryptoException,
         IllegalAccessException, InvocationTargetException, ClassNotFoundException, URISyntaxException {
+
         System.out.print(ConsoleColors.CYAN);
         System.out.println("* Welcome to the Secure Voting Program using a Permissioned BlockChain *");
         System.out.println("- Using IBM's HyperLedger Fabric");

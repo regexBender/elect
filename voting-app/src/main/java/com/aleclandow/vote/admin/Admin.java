@@ -8,7 +8,6 @@ import com.aleclandow.vote.ledger.HyperLedgerConnector;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
-import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Identity;
 import org.hyperledger.fabric.gateway.Wallet;

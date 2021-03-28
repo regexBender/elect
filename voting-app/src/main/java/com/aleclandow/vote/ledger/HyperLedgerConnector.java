@@ -11,7 +11,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
@@ -23,20 +22,18 @@ import org.hyperledger.fabric.gateway.Wallets;
 public class HyperLedgerConnector {
 
     public void createAvailableBallotsOnLedger(String voterId, String contractName) {
-//        transact(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction);
+        transact(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction);
     }
 
     public void getTotalsFromLedger(String voterId, String contractName) {
-//        transact(voterId, contractName, this::getTotalsFromLedgerTransaction);
+        transact(voterId, contractName, this::getTotalsFromLedgerTransaction);
+    }
 
-        try (Gateway gateway = connect(voterId)) {
+    private void createAvailableBallotsOnLedgerTransaction(Contract contract) {
+        try {
+            System.out.println("Submit Transaction: InitLedger creates the available ballot(s) on the ledger.");
 
-            // get the network and contract
-            Network network = gateway.getNetwork(applicationProperties.getNetworkName());
-            Contract contract = network.getContract(contractName);
-
-            getTotalsFromLedgerTransaction(contract);
-
+            contract.submitTransaction(INIT_BALLOT.toString());
         } catch (Exception e) {
             System.err.print(ConsoleColors.RED);
             System.err.println(e.getMessage());
@@ -45,17 +42,15 @@ public class HyperLedgerConnector {
 
     }
 
-    private void createAvailableBallotsOnLedgerTransaction(Contract contract)
-        throws InterruptedException, TimeoutException, ContractException {
-        System.out.println("Submit Transaction: InitLedger creates the available ballot(s) on the ledger.");
-
-        contract.submitTransaction(INIT_BALLOT.toString());
-
-    }
-
-    private void getTotalsFromLedgerTransaction(Contract adminContract) throws ContractException {
-        byte[] result = adminContract.evaluateTransaction(GET_BALLOT.toString());
-        System.out.println("Evaluate Transaction: getBallot, result: " + new String(result));
+    private void getTotalsFromLedgerTransaction(Contract adminContract) {
+        try {
+            byte[] result = adminContract.evaluateTransaction(GET_BALLOT.toString());
+            System.out.println("Evaluate Transaction: getBallot, result: " + new String(result));
+        } catch (ContractException ce) {
+            System.err.print(ConsoleColors.RED);
+            System.err.println(ce.getMessage());
+            System.err.println(Arrays.toString(ce.getStackTrace()));
+        }
     }
 
     private void transact(String voterId, String contractName, Consumer<Contract> transaction) {
