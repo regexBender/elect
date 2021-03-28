@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum VoterAction {
-    CREATE_BALLOTS("vote"),
+    VOTE("vote"),
+    GET_BALLOT("get-ballot"),
     GET_TOTALS("get-totals");
 
     private final String action;

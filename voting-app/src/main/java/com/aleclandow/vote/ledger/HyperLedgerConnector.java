@@ -1,6 +1,7 @@
 package com.aleclandow.vote.ledger;
 
 import static com.aleclandow.util.ApplicationProperties.applicationProperties;
+import static com.aleclandow.vote.ledger.Transaction.CAST_ONE_VOTE_FOR_CANDIDATE;
 import static com.aleclandow.vote.ledger.Transaction.GET_BALLOT;
 import static com.aleclandow.vote.ledger.Transaction.INIT_BALLOT;
 
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
@@ -22,11 +24,34 @@ import org.hyperledger.fabric.gateway.Wallets;
 public class HyperLedgerConnector {
 
     public void createAvailableBallotsOnLedger(String voterId, String contractName) {
-        transact(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction);
+        transactWithConsumer(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction);
     }
 
     public void getTotalsFromLedger(String voterId, String contractName) {
-        transact(voterId, contractName, this::getTotalsFromLedgerTransaction);
+        transactWithConsumer(voterId, contractName, this::getTotalsFromLedgerTransaction);
+    }
+
+    public void getBallotFromLedger(String voterId, String contractName) {
+        transactWithConsumer(voterId, contractName, this::getBallotFromLedgerTransaction);
+    }
+
+    public void castVote(String voterId, String candidateId, String contractName) {
+        transactWithBiConsumer(voterId, contractName, this::voteTransaction, candidateId);
+    }
+
+    private void voteTransaction(Contract contract, String candidateId) {
+        try {
+            System.out.printf("Submit Transaction: Vote for %s.%n", candidateId);
+
+            contract.submitTransaction(CAST_ONE_VOTE_FOR_CANDIDATE.toString(), candidateId);
+
+            System.out.println("You have successfully cast your vote.");
+        } catch (Exception e) {
+            System.err.print(ConsoleColors.RED);
+            System.err.println(e.getMessage());
+            System.err.println(Arrays.toString(e.getStackTrace()));
+        }
+
     }
 
     private void createAvailableBallotsOnLedgerTransaction(Contract contract) {
@@ -53,7 +78,35 @@ public class HyperLedgerConnector {
         }
     }
 
-    private void transact(String voterId, String contractName, Consumer<Contract> transaction) {
+    private void getBallotFromLedgerTransaction(Contract adminContract) {
+        try {
+            byte[] result = adminContract.evaluateTransaction(GET_BALLOT.toString());
+            System.out.println("Evaluate Transaction: getBallot, result: " + new String(result));
+        } catch (ContractException ce) {
+            System.err.print(ConsoleColors.RED);
+            System.err.println(ce.getMessage());
+            System.err.println(Arrays.toString(ce.getStackTrace()));
+        }
+    }
+
+
+    private void transactWithBiConsumer(String voterId, String contractName, BiConsumer<Contract, String> transaction, String arg1) {
+        try (Gateway gateway = connect(voterId)) {
+
+            // get the network and contract
+            Network network = gateway.getNetwork(applicationProperties.getNetworkName());
+            Contract contract = network.getContract(contractName);
+
+            transaction.accept(contract, arg1);
+
+        } catch (Exception e) {
+            System.err.print(ConsoleColors.RED);
+            System.err.println(e.getMessage());
+            System.err.println(Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    private void transactWithConsumer(String voterId, String contractName, Consumer<Contract> transaction) {
         try (Gateway gateway = connect(voterId)) {
 
             // get the network and contract

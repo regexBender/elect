@@ -30,8 +30,16 @@ public class Voter implements User {
         registerAndEnrollWithCertificateAuthority();
     }
 
+    public void voteForCandidate(String candidateId) {
+        hyperLedgerConnector.castVote(voterId, candidateId, applicationProperties.getVoterContractName());
+    }
+
+    public void getBallot() {
+        hyperLedgerConnector.getBallotFromLedger(voterId, applicationProperties.getVoterContractName());
+    }
+
     public void getTotals() {
-        hyperLedgerConnector.getTotalsFromLedger(voterId, applicationProperties.getAdminContractName());
+        hyperLedgerConnector.getTotalsFromLedger(voterId, applicationProperties.getVoterContractName());
     }
 
     public void registerAndEnrollWithCertificateAuthority() throws Exception {

@@ -48,6 +48,9 @@ public class VotingApp {
                 } else if (action.matches("(?i)" + AdminAction.GET_TOTALS)) {
                     admin.getTotals();
 
+                } else {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.printf("Invalid option: %s%n", mode);
                 }
 
             } else if (mode.matches("(?i)" + Mode.REGISTER)) {
@@ -65,12 +68,24 @@ public class VotingApp {
                 System.out.println("Voter Actions: " + VoterAction.ALL_ACTIONS);
                 String action = input.nextLine();
 
-                if (action.matches("(?i)" + AdminAction.CREATE_BALLOTS)) {
-//                    admin.createAvailableBallotsOnLedger();
+                if (action.matches("(?i)" + VoterAction.VOTE)) {
+                    System.out.println("Your Ballot is below. Please vote for one candidate by entering the candiate ID.");
+                    voter.getBallot();
+
+                    System.out.println("Candidate ID: ");
+                    String candidateId = input.nextLine().trim();
+                    voter.voteForCandidate(candidateId);
 
                 } else if (action.matches("(?i)" + VoterAction.GET_TOTALS)) {
+                    System.out.println("Getting totals...");
                     voter.getTotals();
 
+                } else  if (action.matches("(?i)" + VoterAction.GET_BALLOT)) {
+                    System.out.println("Here is a read-only view of what your ballot will look like.");
+                    voter.getBallot();
+                } else {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.printf("Invalid option: %s%n", mode);
                 }
 
             } else if (mode.matches("(?i)" + Mode.EXIT)) {
