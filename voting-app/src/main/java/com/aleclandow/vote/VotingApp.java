@@ -1,10 +1,10 @@
 package com.aleclandow.vote;
 
-import static com.aleclandow.util.ApplicationProperties.APPLICATION_PROPERTIES;
-
 
 import com.aleclandow.util.ApplicationProperties;
 import com.aleclandow.util.ConsoleColors;
+import com.aleclandow.vote.admin.Action;
+import com.aleclandow.vote.admin.Admin;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -22,21 +22,20 @@ public class VotingApp {
         Scanner input = new Scanner(System.in);
 
         ApplicationProperties.loadProperties();
-        System.out.println(APPLICATION_PROPERTIES.getNetworkName());
 
-        while(true) {
+        while (true) {
             System.out.println(ConsoleColors.BLUE);
             System.out.println("Options: " + Mode.ALL_MODES);
             String mode = input.nextLine();
 
             if (mode.matches("(?i)" + Mode.ADMIN)) {
-                System.out.println("Admin Actions: " + Admin.Action.ALL_ACTIONS);
+                System.out.println("Admin Actions: " + Action.ALL_ACTIONS);
                 String action = input.nextLine();
                 Admin admin = new Admin();
 
-                if (action.matches("(?i)" + Admin.Action.CREATE_BALLOTS)) {
+                if (action.matches("(?i)" + Action.CREATE_BALLOTS)) {
                     admin.createAvailableBallotsOnLedger();
-                } else if (action.matches("(?i)" + Admin.Action.GET_TOTALS)) {
+                } else if (action.matches("(?i)" + Action.GET_TOTALS)) {
                     admin.getTotals();
                 }
             } else if (mode.matches("(?i)" + Mode.REGISTER)) {
