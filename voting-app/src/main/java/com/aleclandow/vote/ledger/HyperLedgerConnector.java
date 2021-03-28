@@ -1,6 +1,6 @@
 package com.aleclandow.vote.ledger;
 
-import static com.aleclandow.util.ApplicationProperties.APPLICATION_PROPERTIES;
+import static com.aleclandow.util.ApplicationProperties.applicationProperties;
 import static com.aleclandow.vote.ledger.Transaction.GET_BALLOT;
 import static com.aleclandow.vote.ledger.Transaction.INIT_BALLOT;
 
@@ -48,7 +48,7 @@ public class HyperLedgerConnector {
         try (Gateway gateway = connect(voterId)) {
 
             // get the network and contract
-            Network network = gateway.getNetwork(APPLICATION_PROPERTIES.getNetworkName());
+            Network network = gateway.getNetwork(applicationProperties.getNetworkName());
             contract = network.getContract(contractName);
         } catch (Exception e){
             System.err.print(ConsoleColors.RED);
@@ -64,7 +64,7 @@ public class HyperLedgerConnector {
         Path walletPath = Paths.get("wallet");
         Wallet wallet = Wallets.newFileSystemWallet(walletPath);
         // load a CCP
-        Path networkConfigPath = Paths.get(APPLICATION_PROPERTIES.getNetworkConfigName());
+        Path networkConfigPath = Paths.get(applicationProperties.getNetworkConfigName());
 
         Gateway.Builder builder = Gateway.createBuilder();
         builder.identity(wallet, voterId)

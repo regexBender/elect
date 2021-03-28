@@ -14,15 +14,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ApplicationProperties {
 
-    public static ApplicationProperties APPLICATION_PROPERTIES = null; // singleton instance
+    public static ApplicationProperties applicationProperties = null; // singleton instance
 
     private final String networkName;
     private final String networkConfigName;
     private final String adminContractName;
     private final String voterContractName;
 
+    private final String adminSecret;
+
     public static void loadProperties() throws IOException {
-        if (APPLICATION_PROPERTIES != null) {
+        if (applicationProperties != null) {
             return;
         }
 
@@ -43,12 +45,14 @@ public class ApplicationProperties {
             String networkConfigName = prop.getProperty("network-config-name");
             String adminContractName = prop.getProperty("admin-contract-name");
             String voterContractName = prop.getProperty("voter-contract-name");
+            String adminSecret = prop.getProperty("admin-secret");
 
-            APPLICATION_PROPERTIES = new ApplicationProperties(
+            applicationProperties = new ApplicationProperties(
                 networkName,
                 networkConfigName,
                 adminContractName,
-                voterContractName
+                voterContractName,
+                adminSecret
             );
         } catch (Exception e) {
             System.err.print(ConsoleColors.RED);
