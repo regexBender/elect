@@ -1,4 +1,4 @@
-package com.aleclandow.vote.admin;
+package com.aleclandow.vote.voter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum Action {
-    CREATE_BALLOTS("create-ballots"),
+public enum VoterAction {
+    CREATE_BALLOTS("vote"),
     GET_TOTALS("get-totals");
 
     private final String action;
@@ -19,6 +19,6 @@ public enum Action {
     }
 
     private static List<String> getAllActionsList() {
-        return Arrays.stream(Action.values()).map(Action::toString).collect(Collectors.toList());
+        return Arrays.stream(VoterAction.values()).map(VoterAction::toString).collect(Collectors.toList());
     }
 }
