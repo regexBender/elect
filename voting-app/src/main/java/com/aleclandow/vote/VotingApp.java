@@ -1,11 +1,13 @@
 package com.aleclandow.vote;
 
+import com.aleclandow.util.ApplicationProperties;
 import com.aleclandow.util.ConsoleColors;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class VotingApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.print(ConsoleColors.CYAN);
         System.out.println("* Welcome to the Secure Voting Program using a Permissioned BlockChain *");
         System.out.println("- Using IBM's HyperLedger Fabric");
@@ -16,19 +18,24 @@ public class VotingApp {
         String voterId;
         Scanner input = new Scanner(System.in);
 
+        ApplicationProperties props = new ApplicationProperties();
+        props.loadProperties();
+        System.out.println(props.getAdminContractName());
+
         while(true) {
             System.out.println(ConsoleColors.BLUE);
             System.out.println("Options: " + Mode.ALL_MODES);
             String mode = input.nextLine();
 
             if (mode.matches("(?i)" + Mode.ADMIN)) {
-
+                System.out.println("Is Admin");
             } else if (mode.matches("(?i)" + Mode.REGISTER)) {
 
             } else if (mode.matches("(?i)" + Mode.VOTE)) {
 
             } else if (mode.matches("(?i)" + Mode.EXIT)) {
                 System.out.println("Exiting");
+                System.exit(0);
             } else {
                 System.out.printf("Invalid option: %s%n", mode);
             }
