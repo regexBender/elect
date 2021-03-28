@@ -19,7 +19,7 @@ import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
 
 public class Admin {
 
-    private final static String ADMIN_ID = "admin";
+    public final static String ADMIN_ID = "admin";
 
     private final HyperLedgerConnector hyperLedgerConnector;
 

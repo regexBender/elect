@@ -6,6 +6,7 @@ import com.aleclandow.util.ConsoleColors;
 import com.aleclandow.vote.admin.Action;
 import com.aleclandow.vote.admin.Admin;
 import com.aleclandow.vote.ledger.CertificateAuthority;
+import com.aleclandow.vote.voter.Voter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
@@ -21,10 +22,7 @@ public class VotingApp {
         System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
     }
 
-    public static void main(String[] args)
-        throws IOException, CertificateException, EnrollmentException, InvalidArgumentException, NoSuchMethodException,
-        org.hyperledger.fabric.sdk.exception.InvalidArgumentException, InstantiationException, CryptoException,
-        IllegalAccessException, InvocationTargetException, ClassNotFoundException, URISyntaxException {
+    public static void main(String[] args) throws Exception {
 
         System.out.print(ConsoleColors.CYAN);
         System.out.println("* Welcome to the Secure Voting Program using a Permissioned BlockChain *");
@@ -39,6 +37,7 @@ public class VotingApp {
         ApplicationProperties.loadProperties();
         CertificateAuthority.initCaClient();
 
+        Voter voter = null;
         while (true) {
             System.out.println(ConsoleColors.BLUE);
             System.out.println("Options: " + Mode.ALL_MODES);
@@ -55,7 +54,9 @@ public class VotingApp {
                     admin.getTotals();
                 }
             } else if (mode.matches("(?i)" + Mode.REGISTER)) {
-
+                System.out.println("Please enter a unique voter id:");
+                voterId = input.nextLine();
+                voter = new Voter(voterId);
             } else if (mode.matches("(?i)" + Mode.VOTE)) {
 
             } else if (mode.matches("(?i)" + Mode.EXIT)) {
