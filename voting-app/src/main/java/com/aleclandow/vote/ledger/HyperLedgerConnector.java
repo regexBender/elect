@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import org.hyperledger.fabric.gateway.Contract;
@@ -20,6 +21,10 @@ import org.hyperledger.fabric.gateway.Gateway;
 import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
+import org.hyperledger.fabric.protos.common.Common;
+import org.hyperledger.fabric.protos.discovery.DiscoveryGrpc;
+import org.hyperledger.fabric.sdk.BlockInfo;
+import org.hyperledger.fabric.sdk.Channel;
 
 public class HyperLedgerConnector {
 
@@ -43,7 +48,10 @@ public class HyperLedgerConnector {
         try {
             System.out.printf("Submit Transaction: Vote for %s.%n", candidateId);
 
+            Long startTime = (new Date()).getTime();
             contract.submitTransaction(CAST_ONE_VOTE_FOR_CANDIDATE.toString(), candidateId);
+            Long endTime = (new Date()).getTime();
+            System.out.printf("Time to write one vote to the ledger: %d ms%n", endTime - startTime);
 
             System.out.println("You have successfully cast your vote.");
         } catch (Exception e) {
@@ -69,7 +77,11 @@ public class HyperLedgerConnector {
 
     private void getTotalsFromLedgerTransaction(Contract adminContract) {
         try {
+            Long startTime = (new Date()).getTime();
             byte[] result = adminContract.evaluateTransaction(GET_BALLOT.toString());
+            Long endTime = (new Date()).getTime();
+            System.out.printf("Time to get the world state totals: %d ms%n", endTime - startTime);
+
             System.out.println("Evaluate Transaction: getBallot, result: " + new String(result));
         } catch (ContractException ce) {
             System.err.print(ConsoleColors.RED);
@@ -107,8 +119,10 @@ public class HyperLedgerConnector {
     }
 
     private void transactWithConsumer(String voterId, String contractName, Consumer<Contract> transaction) {
+        Long startTime = (new Date()).getTime();
         try (Gateway gateway = connect(voterId)) {
-
+            Long endTime = (new Date()).getTime();
+            System.out.printf("Time to establish a gateway to the network: %d ms%n", endTime - startTime);
             // get the network and contract
             Network network = gateway.getNetwork(applicationProperties.getNetworkName());
             Contract contract = network.getContract(contractName);
@@ -127,7 +141,7 @@ public class HyperLedgerConnector {
         Path walletPath = Paths.get("wallet");
         Wallet wallet = Wallets.newFileSystemWallet(walletPath);
 
-        // load a CCP
+        // load a CCP (Connection Configuration Profile?)
         // From https://stackoverflow.com/questions/17351043/how-to-get-absolute-path-to-file-in-resources-folder-of-your-project
         URL res = CertificateAuthority.class.getClassLoader().getResource(applicationProperties.getNetworkConfigName());
         File file = Paths.get(res.toURI()).toFile();
