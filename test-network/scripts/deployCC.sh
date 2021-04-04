@@ -66,10 +66,11 @@ elif [ "$CC_SRC_LANGUAGE" = "java" ]; then
 
   infoln "Compiling Java code..."
   pushd $CC_SRC_PATH
-  ./gradlew installDist
+  mvn clean package
   popd
   successln "Finished compiling Java code"
-  CC_SRC_PATH=$CC_SRC_PATH/build/install/$CC_NAME
+#  CC_SRC_PATH=$CC_SRC_PATH/target/$CC_NAME
+#  CC_SRC_PATH=$CC_SRC_PATH/target
 
 elif [ "$CC_SRC_LANGUAGE" = "javascript" ]; then
   CC_RUNTIME_LANGUAGE=node
