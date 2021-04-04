@@ -18,6 +18,9 @@ public class ApplicationProperties {
 
     private final String networkName;
     private final String networkConfigName;
+    private final String networkConfigRelativePath;
+    private final String caCertificateRelativePath;
+    private final String caClientUrl;
     private final String adminContractName;
     private final String voterContractName;
 
@@ -43,6 +46,9 @@ public class ApplicationProperties {
 
             String networkName = prop.getProperty("network-name");
             String networkConfigName = prop.getProperty("network-config-name");
+            String networkConfigRelativePath = prop.getProperty("network.config.relative-path");
+            String caCertificateRelativePath = prop.getProperty("ca.certificate.relative-path");
+            String caClientUrl = prop.getProperty("ca.client.url");
             String adminContractName = prop.getProperty("admin-contract-name");
             String voterContractName = prop.getProperty("voter-contract-name");
             String adminSecret = prop.getProperty("admin-secret");
@@ -50,6 +56,9 @@ public class ApplicationProperties {
             applicationProperties = new ApplicationProperties(
                 networkName,
                 networkConfigName,
+                networkConfigRelativePath,
+                caCertificateRelativePath,
+                caClientUrl,
                 adminContractName,
                 voterContractName,
                 adminSecret

@@ -1,5 +1,8 @@
 package com.aleclandow.vote.ledger;
 
+import static com.aleclandow.util.ApplicationProperties.applicationProperties;
+
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -28,13 +31,17 @@ public class CertificateAuthority {
         Properties props = new Properties();
 
         // From https://stackoverflow.com/questions/17351043/how-to-get-absolute-path-to-file-in-resources-folder-of-your-project
-        URL res = CertificateAuthority.class.getClassLoader().getResource("ca.org1.example.com-cert.pem");
-        File file = Paths.get(res.toURI()).toFile();
-        String certPemAbsolutePath = file.getAbsolutePath();
+//        URL res = CertificateAuthority.class.getClassLoader().getResource("ca.org1.example.com-cert.pem");
+//        File file = Paths.get(res.toURI()).toFile();
+//        String certPemAbsolutePath = file.getAbsolutePath();
+
+        String certPemAbsolutePath = Paths.get(applicationProperties.getCaCertificateRelativePath())
+                                          .toAbsolutePath()
+                                          .toString();
 
         props.put("pemFile", certPemAbsolutePath);
         props.put("allowAllHostNames", "true");
-        caClient = HFCAClient.createNewInstance("https://localhost:7054", props);
+        caClient = HFCAClient.createNewInstance(applicationProperties.getCaClientUrl(), props);
         CryptoSuite cryptoSuite = CryptoSuiteFactory.getDefault().getCryptoSuite();
         caClient.setCryptoSuite(cryptoSuite);
 

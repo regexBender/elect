@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.hyperledger.fabric.samples.assettransfer;
+package com.aleclandow.vote.chaincode.ballot;
 
 import com.owlike.genson.Genson;
 import org.hyperledger.fabric.contract.Context;

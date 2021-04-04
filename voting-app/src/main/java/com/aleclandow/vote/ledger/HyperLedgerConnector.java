@@ -143,12 +143,12 @@ public class HyperLedgerConnector {
 
         // load a CCP (Connection Configuration Profile?)
         // From https://stackoverflow.com/questions/17351043/how-to-get-absolute-path-to-file-in-resources-folder-of-your-project
-        URL res = CertificateAuthority.class.getClassLoader().getResource(applicationProperties.getNetworkConfigName());
-        File file = Paths.get(res.toURI()).toFile();
-        String networkConfigPathString = file.getAbsolutePath();
+//        URL res = CertificateAuthority.class.getClassLoader().getResource(applicationProperties.getNetworkConfigName());
+//        File file = Paths.get(res.toURI()).toFile();
+//        String networkConfigPathString = file.getAbsolutePath();
 
-        Path networkConfigPath = Paths.get(networkConfigPathString);
-
+//        Path networkConfigPath = Paths.get(networkConfigPathString);
+        Path networkConfigPath = Paths.get(applicationProperties.getNetworkConfigRelativePath());
 
         Gateway.Builder builder = Gateway.createBuilder();
         builder.identity(wallet, voterId)
