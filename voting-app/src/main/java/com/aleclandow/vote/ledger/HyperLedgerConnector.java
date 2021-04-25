@@ -8,8 +8,6 @@ import static com.aleclandow.vote.ledger.Transaction.REGISTER_VOTER;
 
 
 import com.aleclandow.util.ConsoleColors;
-import java.io.File;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -22,10 +20,6 @@ import org.hyperledger.fabric.gateway.Gateway;
 import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
-import org.hyperledger.fabric.protos.common.Common;
-import org.hyperledger.fabric.protos.discovery.DiscoveryGrpc;
-import org.hyperledger.fabric.sdk.BlockInfo;
-import org.hyperledger.fabric.sdk.Channel;
 
 public class HyperLedgerConnector {
 
@@ -120,7 +114,12 @@ public class HyperLedgerConnector {
     }
 
 
-    private void transactWithBiConsumer(String voterId, String contractName, BiConsumer<Contract, String> transaction, String arg1) {
+    private void transactWithBiConsumer(
+        String voterId,
+        String contractName,
+        BiConsumer<Contract, String> transaction,
+        String arg1
+    ) {
         try (Gateway gateway = connect(voterId)) {
 
             // get the network and contract
