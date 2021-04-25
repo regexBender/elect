@@ -28,6 +28,7 @@ public class Voter implements User {
         hyperLedgerConnector = new HyperLedgerConnector();
         this.voterId = voterId;
         registerAndEnrollWithCertificateAuthority();
+        hyperLedgerConnector.registerVoterOnLedger(this.voterId, applicationProperties.getVoterContractName());
     }
 
     public void voteForCandidate(String candidateId) {

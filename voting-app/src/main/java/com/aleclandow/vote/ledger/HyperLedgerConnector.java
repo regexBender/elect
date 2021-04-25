@@ -4,6 +4,7 @@ import static com.aleclandow.util.ApplicationProperties.applicationProperties;
 import static com.aleclandow.vote.ledger.Transaction.CAST_ONE_VOTE_FOR_CANDIDATE;
 import static com.aleclandow.vote.ledger.Transaction.GET_BALLOT;
 import static com.aleclandow.vote.ledger.Transaction.INIT_BALLOT;
+import static com.aleclandow.vote.ledger.Transaction.REGISTER_VOTER;
 
 
 import com.aleclandow.util.ConsoleColors;
@@ -28,6 +29,10 @@ import org.hyperledger.fabric.sdk.Channel;
 
 public class HyperLedgerConnector {
 
+    public void registerVoterOnLedger(String voterId, String contractName) {
+        transactWithConsumer(voterId, contractName, this::registerVoterOnLedgerTransaction);
+    }
+
     public void createAvailableBallotsOnLedger(String voterId, String contractName) {
         transactWithConsumer(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction);
     }
@@ -42,6 +47,19 @@ public class HyperLedgerConnector {
 
     public void castVote(String voterId, String candidateId, String contractName) {
         transactWithBiConsumer(voterId, contractName, this::voteTransaction, candidateId);
+    }
+
+    private void registerVoterOnLedgerTransaction(Contract contract) {
+        try {
+            System.out.println("Submit Transaction: Register voter on the ledger.");
+
+            contract.submitTransaction(REGISTER_VOTER.toString());
+        } catch (Exception e) {
+            System.err.print(ConsoleColors.RED);
+            System.err.println(e.getMessage());
+            System.err.println(Arrays.toString(e.getStackTrace()));
+        }
+
     }
 
     private void voteTransaction(Contract contract, String candidateId) {

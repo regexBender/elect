@@ -5,6 +5,7 @@
 package com.aleclandow.vote.chaincode.ballot;
 
 import com.owlike.genson.Genson;
+import java.util.Date;
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
 import org.hyperledger.fabric.contract.annotation.Contact;
@@ -15,6 +16,7 @@ import org.hyperledger.fabric.contract.annotation.License;
 import org.hyperledger.fabric.contract.annotation.Transaction;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
@@ -36,12 +38,20 @@ import java.util.List;
                         url = "https://hyperledger.example.com")))
 @Default
 public final class BallotTransfer implements ContractInterface {
+    private static final String POLLS_OPEN = "pollsOpen";
+    private static final String POLLS_CLOSE = "pollsClose";
 
     private final Genson genson = new Genson();
 
     private enum BallotTransferErrors {
         CANDIDATE_NOT_FOUND,
-        CANDIDATE_ALREADY_EXISTS
+        VOTER_NOT_REGISTERED,
+        CANDIDATE_ALREADY_EXISTS,
+        REGISTERED_VOTER_ALREADY_EXISTS,
+        BALLOT_ALREADY_INITIALIZED,
+        POLLS_NOT_YET_OPEN,
+        POLLS_HAVE_CLOSED,
+        VOTER_HAS_ALREADY_VOTED
     }
 
     /**
@@ -50,12 +60,18 @@ public final class BallotTransfer implements ContractInterface {
      * @param ctx the transaction context
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public void InitBallot(final Context ctx) {
+    public void InitBallot(final Context ctx, final Date pollsOpen, Date pollsClose) {
         ChaincodeStub stub = ctx.getStub();
-
+        if (stub.getStringState(POLLS_OPEN) != null) {
+            String errorMessage = "Ballot has already been initialized";
+            System.out.println(errorMessage);
+            throw new ChaincodeException(errorMessage, BallotTransferErrors.BALLOT_ALREADY_INITIALIZED.toString());
+        }
         createCandidate(ctx, "T001", "Candidate A", "The Turquoise Party");
         createCandidate(ctx, "M001", "Candidate B", "The Maroon Party");
 
+        stub.putStringState("pollsOpen", pollsOpen.toString());
+        stub.putStringState("pollsClose", pollsClose.toString());
     }
 
     /**
@@ -87,6 +103,29 @@ public final class BallotTransfer implements ContractInterface {
         stub.putStringState(candidateId, candidateJSON);
 
         return candidate;
+    }
+
+    /**
+     * Creates a new registered voter on the ledger.
+     *
+     * @param ctx the transaction context
+     */
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public RegisteredVoter registerVoter(final Context ctx) {
+        ChaincodeStub stub = ctx.getStub();
+
+        String voterId = getVoterIdFromContext(ctx);
+        if (registeredVoterExists(ctx)) {
+            String errorMessage = String.format("Voter with id = %s has already registered", voterId);
+            System.out.println(errorMessage);
+            throw new ChaincodeException(errorMessage, BallotTransferErrors.REGISTERED_VOTER_ALREADY_EXISTS.toString());
+        }
+
+        RegisteredVoter registeredVoter = new RegisteredVoter(voterId, false);
+        String registeredVoterJSON = genson.serialize(registeredVoter);
+        stub.putStringState(registeredVoter.getKey(), registeredVoterJSON);
+
+        return registeredVoter;
     }
 
     /**
@@ -172,6 +211,26 @@ public final class BallotTransfer implements ContractInterface {
     }
 
     /**
+     * Checks the existence of the registered voter on the ledger
+     *
+     * @param ctx the transaction context
+     * @return boolean indicating the existence of the registered voter
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public boolean registeredVoterExists(final Context ctx) {
+        ChaincodeStub stub = ctx.getStub();
+        String voterId = getVoterIdFromContext(ctx);
+        String voterKey = RegisteredVoter.createKey(voterId);
+        String candidateJSON = stub.getStringState(voterKey);
+
+        return (candidateJSON != null && !candidateJSON.isEmpty());
+    }
+
+    private String getVoterIdFromContext(final Context ctx) {
+        return ctx.getClientIdentity().getId();
+    }
+
+    /**
      * Changes the owner of a candidate on the ledger.
      *
      * @param ctx the transaction context
@@ -180,7 +239,11 @@ public final class BallotTransfer implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public Candidate castOneVoteForCandidate(final Context ctx, final String candidateID) {
+        Date now = new Date();
+        RegisteredVoter registeredVoter = canVoterVote(ctx, now);
+
         ChaincodeStub stub = ctx.getStub();
+
         String candidateJSON = stub.getStringState(candidateID);
 
         if (candidateJSON == null || candidateJSON.isEmpty()) {
@@ -194,13 +257,58 @@ public final class BallotTransfer implements ContractInterface {
         int currentVotes = candidate.getVotes();
         int newVotes = currentVotes + 1;
 
+        // Update the candidate's votes on the ledger
         Candidate newCandidate = new Candidate(candidate.getId(), candidate.getName(), candidate.getParty());
         newCandidate.setVotes(newVotes);
 
         String newCandidateJSON = genson.serialize(newCandidate);
         stub.putStringState(candidateID, newCandidateJSON);
 
+        // Set the registered voter's hasVoted field to true on the ledger
+        RegisteredVoter registeredVoterAfterVote = new RegisteredVoter(registeredVoter.getVoterId(), true);
+
+        String registeredVoterAfterVoteJSON = genson.serialize(registeredVoterAfterVote);
+        stub.putStringState(registeredVoterAfterVote.getKey(), registeredVoterAfterVoteJSON);
+
         return newCandidate;
+    }
+
+    private RegisteredVoter canVoterVote(Context ctx, Date now) {
+        ChaincodeStub stub = ctx.getStub();
+        String pollsOpenString = stub.getStringState(POLLS_OPEN);
+        Date pollsOpen = genson.deserialize(pollsOpenString, Date.class);
+        if (now.before(pollsOpen)) {
+            String errorMessage = "Polls are not yet open. Polls open at " + pollsOpen;
+            throw new ChaincodeException(errorMessage, BallotTransferErrors.POLLS_NOT_YET_OPEN.toString());
+        }
+
+        String pollsCloseString = stub.getStringState(POLLS_CLOSE);
+        Date pollsClose = genson.deserialize(pollsCloseString, Date.class);
+        if (now.after(pollsClose)) {
+            String errorMessage = "Polls are now closed. Polls closed at " + pollsClose;
+            throw new ChaincodeException(errorMessage, BallotTransferErrors.POLLS_HAVE_CLOSED.toString());
+        }
+
+        String voterId = ctx.getClientIdentity().getId();
+        String voterKey = RegisteredVoter.createKey(voterId);
+        String voterJson = stub.getStringState(voterKey);
+        if (voterJson == null || voterJson.isEmpty()) {
+            String errorMessage = String.format("Voter %s has not registered", voterId);
+            System.out.println(errorMessage);
+            throw new ChaincodeException(errorMessage, BallotTransferErrors.VOTER_NOT_REGISTERED.toString());
+        }
+        // At this point, we have verified that the voter has registered
+        RegisteredVoter registeredVoter = genson.deserialize(voterJson, RegisteredVoter.class);
+
+        if (registeredVoter.getHasVoted()) {
+            String errorMessage = String.format("Voter %s has already voted", voterId);
+            System.out.println(errorMessage);
+            throw new ChaincodeException(errorMessage, BallotTransferErrors.VOTER_HAS_ALREADY_VOTED.toString());
+        }
+
+        // At this point, we have verified that the registered voter has not yet voted
+
+        return registeredVoter;
     }
 
     /**
