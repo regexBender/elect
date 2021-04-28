@@ -78,7 +78,10 @@ public class HyperLedgerConnector {
         try {
             System.out.println("Submit Transaction: InitLedger creates the available ballot(s) on the ledger.");
 
-            contract.submitTransaction(INIT_BALLOT.toString());
+            Date now = new Date();
+            String yesterdayInMillis = Long.toString(now.getTime() - 100000);
+            String tomorrowInMillis = Long.toString(now.getTime() + 100000);
+            contract.submitTransaction(INIT_BALLOT.toString(), yesterdayInMillis, tomorrowInMillis);
         } catch (Exception e) {
             System.err.print(ConsoleColors.RED);
             System.err.println(e.getMessage());

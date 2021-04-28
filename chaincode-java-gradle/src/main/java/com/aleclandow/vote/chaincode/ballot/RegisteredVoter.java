@@ -1,8 +1,12 @@
 package com.aleclandow.vote.chaincode.ballot;
 
+import com.owlike.genson.annotation.JsonIgnore;
+
 public class RegisteredVoter {
+    @JsonIgnore
     public static final String GROUP_NAME = "registeredVoters";
 
+    @JsonIgnore
     public static String createKey(String voterId) {
         return GROUP_NAME + "::" + voterId;
     }
