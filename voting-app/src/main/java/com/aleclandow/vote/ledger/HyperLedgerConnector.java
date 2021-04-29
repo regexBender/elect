@@ -10,6 +10,7 @@ import static com.aleclandow.vote.ledger.Transaction.REGISTER_VOTER;
 import com.aleclandow.util.ConsoleColors;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.function.BiConsumer;
@@ -27,8 +28,9 @@ public class HyperLedgerConnector {
         transactWithConsumer(voterId, contractName, this::registerVoterOnLedgerTransaction);
     }
 
-    public void createAvailableBallotsOnLedger(String voterId, String contractName) {
-        transactWithConsumer(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction);
+    public void createAvailableBallotsOnLedger(String voterId, Duration durationOfOpenPolls, String contractName) {
+        String durationOfOpenPollsMillisString = Long.toString(durationOfOpenPolls.toMillis());
+        transactWithBiConsumer(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction, durationOfOpenPollsMillisString);
     }
 
     public void getTotalsFromLedger(String voterId, String contractName) {
@@ -74,14 +76,20 @@ public class HyperLedgerConnector {
 
     }
 
-    private void createAvailableBallotsOnLedgerTransaction(Contract contract) {
+    private void createAvailableBallotsOnLedgerTransaction(Contract contract, String durationOfOpenPollsMillisString) {
         try {
             System.out.println("Submit Transaction: InitLedger creates the available ballot(s) on the ledger.");
 
             Date now = new Date();
-            String yesterdayInMillis = Long.toString(now.getTime() - 100000);
-            String tomorrowInMillis = Long.toString(now.getTime() + 100000);
-            contract.submitTransaction(INIT_BALLOT.toString(), yesterdayInMillis, tomorrowInMillis);
+            String nowInMillis = Long.toString(now.getTime());
+
+            long durationInMillis = Long.parseLong(durationOfOpenPollsMillisString);
+            String endInMillis = Long.toString(now.getTime() + durationInMillis);
+
+            Long startTime = (new Date()).getTime();
+            contract.submitTransaction(INIT_BALLOT.toString(), nowInMillis, endInMillis);
+            Long endTime = (new Date()).getTime();
+            System.out.printf("Time to write the ballot and start/stop times to the ledger: %d ms%n", endTime - startTime);
         } catch (Exception e) {
             System.err.print(ConsoleColors.RED);
             System.err.println(e.getMessage());

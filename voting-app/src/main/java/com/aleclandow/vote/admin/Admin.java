@@ -7,6 +7,7 @@ import static com.aleclandow.vote.ledger.CertificateAuthority.caClient;
 import com.aleclandow.vote.ledger.HyperLedgerConnector;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.security.cert.CertificateException;
 import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Identity;
@@ -28,8 +29,8 @@ public class Admin {
         enrollWithCertificateAuthority();
     }
 
-    public void createAvailableBallotsOnLedger() {
-        hyperLedgerConnector.createAvailableBallotsOnLedger(ADMIN_ID, applicationProperties.getAdminContractName());
+    public void createAvailableBallotsOnLedger(Duration durationOfPollsOpen) {
+        hyperLedgerConnector.createAvailableBallotsOnLedger(ADMIN_ID, durationOfPollsOpen, applicationProperties.getAdminContractName());
     }
 
     public void getTotals() {

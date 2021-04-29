@@ -1,6 +1,9 @@
 package com.aleclandow.vote;
 
 
+import static java.time.temporal.ChronoUnit.MINUTES;
+
+
 import com.aleclandow.util.ApplicationProperties;
 import com.aleclandow.util.ConsoleColors;
 import com.aleclandow.vote.admin.AdminAction;
@@ -8,6 +11,8 @@ import com.aleclandow.vote.admin.Admin;
 import com.aleclandow.vote.ledger.CertificateAuthority;
 import com.aleclandow.vote.voter.Voter;
 import com.aleclandow.vote.voter.VoterAction;
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
 import java.util.Scanner;
 
 public class VotingApp {
@@ -43,7 +48,11 @@ public class VotingApp {
                 Admin admin = new Admin();
 
                 if (action.matches("(?i)" + AdminAction.CREATE_BALLOTS)) {
-                    admin.createAvailableBallotsOnLedger();
+                    System.out.println("How long will the polls be open? (Enter a duration in minutes)");
+                    String durationInMinsString = input.nextLine().trim();
+                    long durationInMinsLong = Long.parseLong(durationInMinsString);
+                    Duration duration = Duration.of(durationInMinsLong, MINUTES);
+                    admin.createAvailableBallotsOnLedger(duration);
 
                 } else if (action.matches("(?i)" + AdminAction.GET_TOTALS)) {
                     admin.getTotals();
