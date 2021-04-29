@@ -3,8 +3,9 @@
  */
 
 plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'application'
-    id 'maven'
+    id 'java'
 //    id 'checkstyle'
 //    id 'jacoco'
 }
@@ -34,8 +35,17 @@ repositories {
 
 application {
     mainClass = 'org.hyperledger.fabric.contract.ContractRouter'
+    mainClassName = 'org.hyperledger.fabric.contract.ContractRouter'
 }
 
+// https://stackoverflow.com/questions/31405818/want-to-specify-jar-name-and-version-both-in-build-gradle
+jar {
+//    manifest{
+//        attributes ("Fw-Version" : "2.50.00", "${parent.manifestSectionName}")
+//
+//    }
+    archiveName = 'chaincode.jar'
+}
 //checkstyle {
 //    toolVersion '8.21'
 //    configFile file("config/checkstyle/checkstyle.xml")
