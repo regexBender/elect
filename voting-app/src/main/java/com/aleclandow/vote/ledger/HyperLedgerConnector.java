@@ -1,6 +1,8 @@
 package com.aleclandow.vote.ledger;
 
 import static com.aleclandow.util.ApplicationProperties.applicationProperties;
+import static com.aleclandow.util.ConsoleColors.MAGENTA;
+import static com.aleclandow.util.ConsoleColors.RESET;
 import static com.aleclandow.vote.ledger.Transaction.CAST_ONE_VOTE_FOR_CANDIDATE;
 import static com.aleclandow.vote.ledger.Transaction.GET_BALLOT;
 import static com.aleclandow.vote.ledger.Transaction.INIT_BALLOT;
@@ -8,6 +10,11 @@ import static com.aleclandow.vote.ledger.Transaction.REGISTER_VOTER;
 
 
 import com.aleclandow.util.ConsoleColors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -29,8 +36,7 @@ public class HyperLedgerConnector {
     }
 
     public void createAvailableBallotsOnLedger(String voterId, Duration durationOfOpenPolls, String contractName) {
-        String durationOfOpenPollsMillisString = Long.toString(durationOfOpenPolls.toMillis());
-        transactWithBiConsumer(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction, durationOfOpenPollsMillisString);
+        transactWithBiConsumer(voterId, contractName, this::createAvailableBallotsOnLedgerTransaction, durationOfOpenPolls);
     }
 
     public void getTotalsFromLedger(String voterId, String contractName) {
@@ -76,15 +82,14 @@ public class HyperLedgerConnector {
 
     }
 
-    private void createAvailableBallotsOnLedgerTransaction(Contract contract, String durationOfOpenPollsMillisString) {
+    private void createAvailableBallotsOnLedgerTransaction(Contract contract, Duration durationOfOpenPolls) {
         try {
             System.out.println("Submit Transaction: InitLedger creates the available ballot(s) on the ledger.");
 
             Date now = new Date();
             String nowInMillis = Long.toString(now.getTime());
 
-            long durationInMillis = Long.parseLong(durationOfOpenPollsMillisString);
-            String endInMillis = Long.toString(now.getTime() + durationInMillis);
+            String endInMillis = Long.toString(now.getTime() + durationOfOpenPolls.toMillis());
 
             Long startTime = (new Date()).getTime();
             contract.submitTransaction(INIT_BALLOT.toString(), nowInMillis, endInMillis);
@@ -105,7 +110,8 @@ public class HyperLedgerConnector {
             Long endTime = (new Date()).getTime();
             System.out.printf("Time to get the world state totals: %d ms%n", endTime - startTime);
 
-            System.out.println("Evaluate Transaction: getBallot, result: " + new String(result));
+            String formattedResult = convertToFormattedJson(result);
+            System.out.println("Evaluate Transaction: getBallot, result: " + MAGENTA + formattedResult);
         } catch (ContractException ce) {
             System.err.print(ConsoleColors.RED);
             System.err.println(ce.getMessage());
@@ -116,7 +122,8 @@ public class HyperLedgerConnector {
     private void getBallotFromLedgerTransaction(Contract adminContract) {
         try {
             byte[] result = adminContract.evaluateTransaction(GET_BALLOT.toString());
-            System.out.println("Evaluate Transaction: getBallot, result: " + new String(result));
+            String formattedResult = convertToFormattedJson(result);
+            System.out.println("Evaluate Transaction: getBallot, result: " + MAGENTA + formattedResult);
         } catch (ContractException ce) {
             System.err.print(ConsoleColors.RED);
             System.err.println(ce.getMessage());
@@ -125,11 +132,11 @@ public class HyperLedgerConnector {
     }
 
 
-    private void transactWithBiConsumer(
+    private <T> void transactWithBiConsumer(
         String voterId,
         String contractName,
-        BiConsumer<Contract, String> transaction,
-        String arg1
+        BiConsumer<Contract, T > transaction,
+        T arg1
     ) {
         try (Gateway gateway = connect(voterId)) {
 
@@ -183,5 +190,17 @@ public class HyperLedgerConnector {
                .networkConfig(networkConfigPath)
                .discovery(true);
         return builder.connect();
+    }
+
+    private String convertToFormattedJson(byte[] byteArray) {
+        // https://coderwall.com/p/ab5qha/convet-json-string-to-pretty-print-java-gson
+        JsonParser parser = new JsonParser();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        String resultString = new String(byteArray);
+        JsonArray jsonArray = parser.parse(resultString).getAsJsonArray();
+        String formattedResult = gson.toJson(jsonArray);
+
+        return formattedResult;
     }
 }
