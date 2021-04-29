@@ -1,6 +1,7 @@
 package com.aleclandow.vote;
 
 
+import static com.aleclandow.util.ConsoleColors.BLUE;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 
@@ -12,7 +13,6 @@ import com.aleclandow.vote.ledger.CertificateAuthority;
 import com.aleclandow.vote.voter.Voter;
 import com.aleclandow.vote.voter.VoterAction;
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
 import java.util.Scanner;
 
 public class VotingApp {
@@ -38,7 +38,7 @@ public class VotingApp {
 
         Voter voter = null;
         while (true) {
-            System.out.print(ConsoleColors.BLUE);
+            System.out.print(BLUE);
             System.out.println("Options: " + Mode.ALL_MODES);
             String mode = input.nextLine();
 
@@ -81,7 +81,7 @@ public class VotingApp {
                     System.out.println("Your Ballot is below. Please vote for one candidate by entering the candiate ID.");
                     voter.getBallot();
 
-                    System.out.println("Candidate ID: ");
+                    System.out.println(BLUE + "Candidate ID: ");
                     String candidateId = input.nextLine().trim();
                     voter.voteForCandidate(candidateId);
 
