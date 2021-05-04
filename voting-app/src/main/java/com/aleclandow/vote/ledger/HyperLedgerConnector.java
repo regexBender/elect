@@ -77,14 +77,13 @@ public class HyperLedgerConnector {
              () -> {
                  try {
                      contract.submitTransaction(CAST_ONE_VOTE_FOR_CANDIDATE.toString(), candidateId);
+                     System.out.println(BLUE + "You have successfully cast your vote.");
                  } catch (Exception e) {
                      System.err.print(ConsoleColors.RED);
                      System.err.println(e.getMessage());
                      System.err.println(Arrays.toString(e.getStackTrace()));
                  }
              });
-
-        System.out.println(BLUE + "You have successfully cast your vote.");
 
     }
 
