@@ -18,9 +18,11 @@ import com.google.gson.JsonParser;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.function.BiConsumer;
+import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.hyperledger.fabric.gateway.Contract;
@@ -36,7 +38,7 @@ public class HyperLedgerConnector {
     }
 
     public void createAvailableBallotsOnLedger(String voterId, Duration durationOfOpenPolls, String contractName) {
-        transactWithBiConsumer(voterId,
+        transactWithBiFunction(voterId,
                                contractName,
                                this::createAvailableBallotsOnLedgerTransaction,
                                durationOfOpenPolls);
@@ -50,8 +52,8 @@ public class HyperLedgerConnector {
         transactWithConsumer(voterId, contractName, this::getBallotFromLedgerTransaction);
     }
 
-    public void castVote(String voterId, String candidateId, String contractName) {
-        transactWithBiConsumer(voterId, contractName, this::voteTransaction, candidateId);
+    public long castVote(String voterId, String candidateId, String contractName) {
+        return transactWithBiFunction(voterId, contractName, this::voteTransaction, candidateId);
     }
 
     private void registerVoterOnLedgerTransaction(Contract contract) {
@@ -70,10 +72,10 @@ public class HyperLedgerConnector {
 
     }
 
-    private void voteTransaction(Contract contract, String candidateId) {
+    private long voteTransaction(Contract contract, String candidateId) {
         System.out.printf(BLUE + "Submit Transaction: Vote for %s.%n", candidateId);
 
-        time("Time to write one vote to the ledger",
+        return time("Time to write one vote to the ledger",
              () -> {
                  try {
                      contract.submitTransaction(CAST_ONE_VOTE_FOR_CANDIDATE.toString(), candidateId);
@@ -87,14 +89,14 @@ public class HyperLedgerConnector {
 
     }
 
-    private void createAvailableBallotsOnLedgerTransaction(Contract contract, Duration durationOfOpenPolls) {
+    private long createAvailableBallotsOnLedgerTransaction(Contract contract, Duration durationOfOpenPolls) {
         System.out.println(BLUE + "Submit Transaction: InitLedger creates the available ballot(s) on the ledger.");
 
         Date now = new Date();
         String nowInMillis = Long.toString(now.getTime());
         String endInMillis = Long.toString(now.getTime() + durationOfOpenPolls.toMillis());
 
-        time("Time to write the ballot and start/stop times to the ledger",
+        return time("Time to write the ballot and start/stop times to the ledger",
              () -> {
                  try {
                      contract.submitTransaction(INIT_BALLOT.toString(), nowInMillis, endInMillis);
@@ -130,12 +132,13 @@ public class HyperLedgerConnector {
         getTotalsFromLedgerTransaction(adminContract);
     }
 
-    private <T> void transactWithBiConsumer(
+    private <T> long transactWithBiFunction(
         String voterId,
         String contractName,
-        BiConsumer<Contract, T> transaction,
+        BiFunction<Contract, T, Long> transaction,
         T arg1
     ) {
+        List<Long> singletonTimeList = new ArrayList<>();
         time("Time to establish a gateway to the network, and then close that connection",
              () -> {
                  Long startTime = (new Date()).getTime();
@@ -147,7 +150,7 @@ public class HyperLedgerConnector {
                      Network network = gateway.getNetwork(applicationProperties.getNetworkName());
                      Contract contract = network.getContract(contractName);
 
-                     transaction.accept(contract, arg1);
+                     singletonTimeList.add(transaction.apply(contract, arg1));
 
                  } catch (Exception e) {
                      System.err.print(ConsoleColors.RED);
@@ -156,6 +159,7 @@ public class HyperLedgerConnector {
                  }
         });
 
+        return singletonTimeList.get(0);
     }
 
     private void transactWithConsumer(String voterId, String contractName, Consumer<Contract> transaction) {
@@ -206,11 +210,15 @@ public class HyperLedgerConnector {
         return formattedResult;
     }
 
-    private void time(String message, Runnable transaction) {
+    private long time(String message, Runnable transaction) {
         Long startTime = (new Date()).getTime();
         transaction.run();
         Long endTime = (new Date()).getTime();
-        System.out.printf(YELLOW + message + ": %d ms%n", endTime - startTime);
+
+        long timeInMillis = endTime - startTime;
+        System.out.printf(YELLOW + message + ": %d ms%n", timeInMillis);
+
+        return timeInMillis;
     }
 
     private <T> T time(String message, Supplier<T> transaction) {

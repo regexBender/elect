@@ -9,6 +9,7 @@ import com.aleclandow.vote.admin.GhostAdmin;
 import com.aleclandow.vote.ledger.HyperLedgerConnector;
 import java.nio.file.Paths;
 import java.util.Set;
+import lombok.Setter;
 import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Identity;
 import org.hyperledger.fabric.gateway.Wallet;
@@ -24,6 +25,9 @@ public class Voter implements User {
 
     private final String voterId;
 
+    @Setter
+    private String candidateToVoteFor;
+
     public Voter(String voterId) throws Exception {
         hyperLedgerConnector = new HyperLedgerConnector();
         this.voterId = voterId;
@@ -31,8 +35,12 @@ public class Voter implements User {
         hyperLedgerConnector.registerVoterOnLedger(this.voterId, applicationProperties.getVoterContractName());
     }
 
-    public void voteForCandidate(String candidateId) {
-        hyperLedgerConnector.castVote(voterId, candidateId, applicationProperties.getVoterContractName());
+    public long vote() {
+        return voteForCandidate(candidateToVoteFor);
+    }
+
+    public long voteForCandidate(String candidateId) {
+        return hyperLedgerConnector.castVote(voterId, candidateId, applicationProperties.getVoterContractName());
     }
 
     public void getBallot() {

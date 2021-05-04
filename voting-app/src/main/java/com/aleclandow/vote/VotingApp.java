@@ -7,12 +7,15 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 
 import com.aleclandow.util.ApplicationProperties;
 import com.aleclandow.util.ConsoleColors;
-import com.aleclandow.vote.admin.AdminAction;
 import com.aleclandow.vote.admin.Admin;
+import com.aleclandow.vote.admin.AdminAction;
 import com.aleclandow.vote.ledger.CertificateAuthority;
+import com.aleclandow.vote.test.TestAction;
+import com.aleclandow.vote.test.Tester;
 import com.aleclandow.vote.voter.Voter;
 import com.aleclandow.vote.voter.VoterAction;
 import java.time.Duration;
+import java.util.List;
 import java.util.Scanner;
 
 public class VotingApp {
@@ -78,7 +81,8 @@ public class VotingApp {
                 String action = input.nextLine();
 
                 if (action.matches("(?i)" + VoterAction.VOTE)) {
-                    System.out.println("Your Ballot is below. Please vote for one candidate by entering the candiate ID.");
+                    System.out.println(
+                        "Your Ballot is below. Please vote for one candidate by entering the candiate ID.");
                     voter.getBallot();
 
                     System.out.println(BLUE + "Candidate ID: ");
@@ -89,9 +93,45 @@ public class VotingApp {
                     System.out.println("Getting totals...");
                     voter.getTotals();
 
-                } else  if (action.matches("(?i)" + VoterAction.GET_BALLOT)) {
+                } else if (action.matches("(?i)" + VoterAction.GET_BALLOT)) {
                     System.out.println("Here is a read-only view of what your ballot will look like.");
                     voter.getBallot();
+                } else {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.printf("Invalid option: %s%n", mode);
+                }
+            } else if (mode.matches("(?i)" + Mode.TEST)) {
+                System.out.println("Test Actions: " + TestAction.ALL_ACTIONS);
+                String action = input.nextLine();
+
+                if (action.matches("(?i)" + TestAction.BLOCKING)) {
+                    System.out.println("How many test voters?");
+                    Integer numberOfTestVoters = input.nextInt();
+
+                    Tester tester = new Tester(numberOfTestVoters);
+                    List<Long> voteTimesInMillis = tester.testBlocking();
+                    Double averageTime = voteTimesInMillis
+                        .stream()
+                        .mapToLong(a -> a)
+                        .average()
+                        .getAsDouble();
+                    System.out.println("Vote times (ms):");
+                    voteTimesInMillis.forEach(System.out::println);
+                    System.out.println("Average vote time (blocking): " + averageTime + " ms");
+                } else if (action.matches("(?i)" + TestAction.PARALLEL)) {
+                    System.out.println("How many test voters?");
+                    Integer numberOfTestVoters = input.nextInt();
+                    Tester tester = new Tester(numberOfTestVoters);
+
+                    List<Long> voteTimesInMillis = tester.testParallel();
+                    Double averageTime = voteTimesInMillis
+                        .stream()
+                        .mapToLong(a -> a)
+                        .average()
+                        .getAsDouble();
+                    System.out.println("Vote times (ms):");
+                    voteTimesInMillis.forEach(System.out::println);
+                    System.out.println("Average vote time (parallel): " + averageTime + " ms");
                 } else {
                     System.out.print(ConsoleColors.RED);
                     System.out.printf("Invalid option: %s%n", mode);
@@ -109,7 +149,6 @@ public class VotingApp {
 
 //        System.out.println("To register, please enter your voter ID and password:");
 //        voterId = input.nextLine();
-
 
 
     }

@@ -11,6 +11,7 @@ public enum Mode {
     REGISTER("register"),
     VOTE("vote"),
     ADMIN("admin"),
+    TEST("test"),
     EXIT("exit");
 
     private final String mode;
