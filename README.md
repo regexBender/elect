@@ -51,6 +51,7 @@ export CORE_PEER_ADDRESS=localhost:11051
 peer lifecycle chaincode package basic-ballot.tar.gz --path <FULL_PATH_TO_THIS_REPO>/chaincode-java-gradle//build/install/basic-ballot --lang java --label basic-ballot_1.0
 ```
 For example, my `<FULL_PATH_TO_THIS_REPO> = /Users/alandow/csc724-adv-distributed-systems`
+
 7. Install the packaged chaincode on the Org3 peer:
 ```
 peer lifecycle chaincode install basic-ballot.tar.gz
