@@ -8,9 +8,13 @@
 ### To start the network with two peers belonging to two separate organizations (Org1 and Org2):
 
 1. Navigate to the root directory of this repository.
+2. Navigate to the `test-network` directory:
+```bash
+cd test-network/
+```
 2. Initialize the network with a channel called `test-ballot-channel`, and use Hyperledger's built-in certificate authority:
 ```bash
-/network.sh up createChannel -c test-ballot-channel -ca
+./network.sh up createChannel -c test-ballot-channel -ca
 ```
 3. Deploy the chaincode I wrote to each of the two nodes now in the network:
 ```bash
@@ -22,7 +26,7 @@
 1. Navigate to the root directory of this repository.
 2. Navigate to the `addOrg3` directory:
 ```bash
-cd addOrg3/
+cd test-network/addOrg3/
 ```
 3. Add Org3 and its peer to the channel `test-ballot-channel`:
 ```bash
