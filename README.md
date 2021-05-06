@@ -32,7 +32,10 @@ cd test-network/addOrg3/
 ```bash
 ./addOrg3.sh up -c test-ballot-channel
 ```
-4. Navigate to the root directory of this repository.
+4. Navigate to the `test-network` directory of this repository.
+```bash
+cd ../
+```
 5. Masquerade as the Org3 admin:
 ```bash
 export PATH=${PWD}/../bin:$PATH
