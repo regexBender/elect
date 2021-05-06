@@ -1,8 +1,8 @@
 # csc724-adv-distributed-systems
 
-1. [Start the Network](## Start the Network)
-2. [Add a Peer](## Add a Peer)
-3. [Run the App](### Run the App)
+1. [Start the Network](#start-the-network)
+2. [Add a Peer](#add-a-peer)
+3. [Run the App](#run-the-app)
 
 ## Start the Network
 ### To start the network with two peers belonging to two separate organizations (Org1 and Org2):
