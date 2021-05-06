@@ -73,13 +73,13 @@ For example, my `<FULL_PATH_TO_THIS_REPO> = /Users/alandow/csc724-adv-distribute
 ```bash
 cd voting-app/
 ```
-3. Build with maven:
+3. Package with maven:
 ```
-mvn clean install
+mvn clean package
 ```
 4. Run the app:
 ```
-java -cp target/voting-app-1.0-SNAPSHOT.jar com.aleclandow.vote.VotingApp
+java -jar target/voting-app-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 IMPORTANT: Ensure the `/wallet` directory is deleted before running the app. Otherwise meaningless credentials will be used and the app will not work.
 
