@@ -61,7 +61,7 @@ public final class BallotTransfer implements ContractInterface {
      * @param ctx the transaction context
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public void InitBallot(final Context ctx, final String pollsOpen, String pollsClose) {
+    public void InitBallot(final Context ctx, final String pollsOpen, final String pollsClose) {
         ChaincodeStub stub = ctx.getStub();
         String pollsOpenString = stub.getStringState(POLLS_OPEN);
         if (pollsOpenString != null && !pollsOpenString.isEmpty()) {
