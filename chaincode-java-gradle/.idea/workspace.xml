@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4994d893-5f0f-4d10-b0ed-734dbb7abe99" name="Default Changelist" comment="Everything seems to be working">
+      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/basic-ballot.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/libs/chaincode" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/libs/chaincode.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/.idea/checkstyle-idea.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/.idea/test-network.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/addVoterPeer.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-network/startVotingNetwork.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../voting-app/voting-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test-network/configtx/configtx.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../test-network/configtx/configtx.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../voting-app/src/main/resources/ca.org1.example.com-cert.pem" beforeDir="false" afterPath="$PROJECT_DIR$/../voting-app/src/main/resources/ca.org1.example.com-cert.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../voting-app/src/main/resources/connection-org1.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../voting-app/src/main/resources/connection-org1.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wallet/admin.id" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wallet/alec1.id" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wallet/alec2.id" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="basic-ballot" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="basic-ballot" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="basic-ballot" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1rfgHQXoVQJ0So52rKNXK5LivVL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4994d893-5f0f-4d10-b0ed-734dbb7abe99" name="Default Changelist" comment="" />
+      <created>1619372469230</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1619372469230</updated>
+      <workItem from="1619372472128" duration="946000" />
+      <workItem from="1619373556292" duration="7951000" />
+      <workItem from="1619402623815" duration="86000" />
+      <workItem from="1619435996618" duration="24000" />
+      <workItem from="1619546555826" duration="2175000" />
+      <workItem from="1619558094264" duration="602000" />
+      <workItem from="1619617309965" duration="4666000" />
+      <workItem from="1619624459097" duration="4050000" />
+      <workItem from="1619647134654" duration="7012000" />
+      <workItem from="1619718855261" duration="574000" />
+      <workItem from="1620097209558" duration="1154000" />
+      <workItem from="1620213537916" duration="27000" />
+      <workItem from="1620335702198" duration="1459000" />
+    </task>
+    <task id="LOCAL-00001" summary="Ensure a voter cannot vote twice by adding registered voters to the ledger">
+      <created>1619385844604</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1619385844604</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Registering problems potentially fixed">
+      <created>1619646924549</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1619646924549</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Everything seems to be working">
+      <created>1619660703433</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1619660703433</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add final">
+      <created>1620335987894</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1620335987894</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Ensure a voter cannot vote twice by adding registered voters to the ledger" />
+    <MESSAGE value="Registering problems potentially fixed" />
+    <MESSAGE value="Everything seems to be working" />
+    <MESSAGE value="Add final" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add final" />
+  </component>
+</project>

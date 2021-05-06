@@ -1,0 +1,7 @@
+com/aleclandow/vote/chaincode/ballot/RegisteredVoter.java
+ com.aleclandow.vote.chaincode.ballot.RegisteredVoter
+com/aleclandow/vote/chaincode/ballot/BallotTransfer.java
+ com.aleclandow.vote.chaincode.ballot.BallotTransfer
+ com.aleclandow.vote.chaincode.ballot.BallotTransfer$BallotTransferErrors
+com/aleclandow/vote/chaincode/ballot/Candidate.java
+ com.aleclandow.vote.chaincode.ballot.Candidate

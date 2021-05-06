@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.21">
+<file name="/Users/alandow/go/src/github.com/regexBender/fabric-samples/asset-transfer-basic/chaincode-java/src/main/java/org/hyperledger/fabric/samples/assettransfer/Asset.java">
+</file>
+<file name="/Users/alandow/go/src/github.com/regexBender/fabric-samples/asset-transfer-basic/chaincode-java/src/main/java/org/hyperledger/fabric/samples/assettransfer/AssetTransfer.java">
+</file>
+<file name="/Users/alandow/go/src/github.com/regexBender/fabric-samples/asset-transfer-basic/chaincode-java/src/main/java/org/hyperledger/fabric/samples/assettransfer/BallotTransfer.java">
+<error line="79" column="47" severity="error" message="&apos;)&apos; is preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.ParenPadCheck"/>
+</file>
+<file name="/Users/alandow/go/src/github.com/regexBender/fabric-samples/asset-transfer-basic/chaincode-java/src/main/java/org/hyperledger/fabric/samples/assettransfer/Candidate.java">
+<error line="42" column="26" severity="error" message="Parameter votes should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="42" column="30" severity="error" message="&apos;votes&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
+</file>
+</checkstyle>
