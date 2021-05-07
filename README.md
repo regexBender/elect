@@ -82,6 +82,8 @@ cd voting-app/
 ```
 mvn clean package
 ```
+As a backup, I have also submitted a copy of `voting-app-1.0-SNAPSHOT-jar-with-dependencies.jar` on Moodle.
+
 4. Run the app:
 ```
 java -jar target/voting-app-1.0-SNAPSHOT-jar-with-dependencies.jar
