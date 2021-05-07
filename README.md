@@ -1,9 +1,15 @@
 # csc724-adv-distributed-systems
 
+0. [Supporting Software](#supporting-software)
 1. [Start the Network](#start-the-network)
 2. [Add a Peer](#add-a-peer)
 3. [Run the App](#run-the-app)
 4. [Usage](#usage)
+
+## Supporting Software
+It is possible you may need the most recent version of cURL and/or Docker.
+
+[Hyperledger provides instructions for downloading prerequisites](https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html).
 
 ## Start the Network
 ### To start the network with two peers belonging to two separate organizations (Org1 and Org2):
