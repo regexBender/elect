@@ -91,11 +91,10 @@ mvn clean package
 As a backup, I have also submitted a copy of `voting-app-1.0-SNAPSHOT-jar-with-dependencies.jar` on Moodle.
 
 4. Run the app:
+IMPORTANT: Ensure the `/wallet` directory is deleted before running the app. Otherwise meaningless credentials will be used and the app will not work.
 ```
 java -jar target/voting-app-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
-IMPORTANT: Ensure the `/wallet` directory is deleted before running the app. Otherwise meaningless credentials will be used and the app will not work.
-
 The app can also be run from `src/main/java/com/aleclandow/vote/VotingApp.java` in IntelliJ.
 
 ## Usage
