@@ -3,6 +3,7 @@
 1. [Start the Network](#start-the-network)
 2. [Add a Peer](#add-a-peer)
 3. [Run the App](#run-the-app)
+4. [Usage](#usage)
 
 ## Start the Network
 ### To start the network with two peers belonging to two separate organizations (Org1 and Org2):
@@ -88,3 +89,8 @@ java -jar target/voting-app-1.0-SNAPSHOT-jar-with-dependencies.jar
 IMPORTANT: Ensure the `/wallet` directory is deleted before running the app. Otherwise meaningless credentials will be used and the app will not work.
 
 The app can also be run from `src/main/java/com/aleclandow/vote/VotingApp.java` in IntelliJ.
+
+## Usage
+The first action that must be done is to create a ballot as an admin. Type `admin` and then `create-ballots` to create the ballot on the blockchain.
+
+Further options are printed after each command.
