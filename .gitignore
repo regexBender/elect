@@ -2,3 +2,4 @@
 /.idea/libraries/*.xml
 /.idea/modules/
 /voting-app/.idea/
+/voting-app/wallet/
