@@ -1,4 +1,4 @@
-# csc724-adv-distributed-systems
+# Elect
 
 0. [Supporting Software](#supporting-software)
 1. [Start the Network](#start-the-network)
